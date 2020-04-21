@@ -1,17 +1,17 @@
-const express = require('express')
-const uuid = require('uuid/v4')
-const logger = require('../logger')
-const { cards, lists } = require('../store')
+const express = require('express');
+const { v4: uuidv4 } = require('uuid');
+const logger = require('../logger');
+const { cards, lists } = require('../store');
 
-const listRouter = express.Router()
-const bodyParser = express.json()
+const listRouter = express.Router();
+const bodyParser = express.json();
 
 listRouter
-  .route('/list')
+  .route('/')
   .get((req, res) => {
     // move implementation logic into here
     res
-    .json(lists);
+      .json(lists);
   })
   .post(bodyParser, (req, res) => {
     // move implementation logic into here
@@ -43,7 +43,7 @@ listRouter
     }
   
     // get an id
-    const id = uuid();
+    const id = uuidv4();
   
     const list = {
       id,
@@ -59,10 +59,10 @@ listRouter
       .status(201)
       .location(`http://localhost:8000/list/${id}`)
       .json({id});
-  })
+  });
 
 listRouter
-  .route('/list/:id')
+  .route('/:id')
   .get((req, res) => {
     // move implementation logic into here
     const { id } = req.params;
@@ -97,6 +97,6 @@ listRouter
     res
       .status(204)
       .end();
-  })
+  });
 
-module.exports = listRouter
+module.exports = listRouter;

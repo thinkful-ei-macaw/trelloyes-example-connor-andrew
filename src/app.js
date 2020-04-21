@@ -3,7 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const uuid = require('uuid/v4');
+
 const { NODE_ENV } = require('./config');
 const cardRouter = require('./card/card-router');
 const listRouter = require('./list/list-router');
@@ -20,10 +20,8 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
-
 // authentication middleware
 app.use(function validateBearerToken(req, res, next) {
-  console.log('test 1');
   const apiToken = process.env.API_TOKEN;
   const authToken = req.get('Authorization');
 
@@ -35,8 +33,9 @@ app.use(function validateBearerToken(req, res, next) {
   next();
 });
 
-app.use(cardRouter)
-app.use(listRouter)
+// Routes
+app.use('/card', cardRouter);
+app.use('/list', listRouter);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Hello, World!' });

@@ -1,13 +1,13 @@
-const express = require('express')
-const uuid = require('uuid/v4')
-const logger = require('../logger')
-const { cards, lists } = require('../store')
+const express = require('express');
+const { v4: uuidv4 } = require('uuid');
+const logger = require('../logger');
+const { cards, lists } = require('../store');
 
-const cardRouter = express.Router()
-const bodyParser = express.json()
+const cardRouter = express.Router();
+const bodyParser = express.json();
 
 cardRouter
-  .route('/card')
+  .route('/')
   .get((req, res) => {
     // move implementation logic into here
     res.json(cards);
@@ -17,23 +17,21 @@ cardRouter
     const { title, content } = req.body;
 
     if (!title) {
-      logger.error(`Title is required`);
+      logger.error('Title is required');
       return res
         .status(400)
         .send('Invalid data');
     }
 
     if (!content) {
-      logger.error(`Content is required`);
+      logger.error('Content is required');
       return res
         .status(400)
         .send('Invalid data');
     }
 
-
-
     // get an id
-    const id = uuid();
+    const id = uuidv4();
 
     const card = {
       id,
@@ -53,11 +51,11 @@ cardRouter
 
 
 cardRouter
-  .route('/card/:id')
+  .route('/:id')
   .get((req, res) => {
     // move implementation logic into here
     const { id } = req.params;
-    const card = cards.find(c => c.id == id);
+    const card = cards.find(c => c.id === id);
 
     // make sure we found a card
     if (!card) {
@@ -73,7 +71,7 @@ cardRouter
     // move implementation logic into here
     const { id } = req.params;
 
-    const cardIndex = cards.findIndex(c => c.id == id);
+    const cardIndex = cards.findIndex(c => c.id === id);
 
     if (cardIndex === -1) {
       logger.error(`Card with id ${id} not found.`);
@@ -96,6 +94,6 @@ cardRouter
     res
       .status(204)
       .end();
-  })
+  });
 
-module.exports = cardRouter
+module.exports = cardRouter;
